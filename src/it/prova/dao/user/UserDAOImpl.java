@@ -4,12 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import it.prova.dao.AbstractMySQLDAO;
-import it.prova.gestionecompagniapatterndao.model.Compagnia;
 import it.prova.model.User;
 
 public class UserDAOImpl extends AbstractMySQLDAO implements UserDAO {
@@ -244,7 +244,7 @@ public class UserDAOImpl extends AbstractMySQLDAO implements UserDAO {
 		return result;
 	}
 
-	public List<User> findAllCreatiPrimaDi(Date dataConfronto) throws Exception {
+	public List<User> findAllCreatiPrimaDi(LocalDate dataConfronto) throws Exception {
 		if (isNotActive())
 			throw new Exception("Connessione inattiva");
 		if (dataConfronto == null)
@@ -278,16 +278,75 @@ public class UserDAOImpl extends AbstractMySQLDAO implements UserDAO {
 		return result;
 	}
 
-	}
-
 	public List<User> findByCognomeENomeCheInziaCon(String cognomeInput, String inzialeNomeInput) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		if (isNotActive())
+			throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+		if (cognomeInput == null || inzialeNomeInput == null)
+			throw new Exception("Valore di input non ammesso.");
+
+		ArrayList<User> result = new ArrayList<User>();
+
+		try (PreparedStatement ps = connection.prepareStatement("select * from user u where u.cognome like ? and u.nome like ?;")) {
+			ps.setString(1, cognomeInput + "%");
+			ps.setString(2, inzialeNomeInput + "%");
+
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					User userTemp = new User();
+					userTemp.setNome(rs.getString("NOME"));
+					userTemp.setCognome(rs.getString("COGNOME"));
+					userTemp.setLogin(rs.getString("LOGIN"));
+					userTemp.setPassword(rs.getString("PASSWORD"));
+					userTemp.setDateCreated(
+							rs.getDate("DATECREATED") != null ? rs.getDate("DATECREATED").toLocalDate() : null);
+					userTemp.setId(rs.getLong("ID"));
+					result.add(userTemp);
+				}
+			} // niente catch qui
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return result;
 	}
 
-	public User accedi(String loginInput, String passwordInput) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public User signIn(String loginInput, String passwordInput) throws Exception {
+		if (isNotActive())
+			throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+		if (loginInput == null || passwordInput == null)
+			throw new Exception("Valore di input non ammesso.");
+
+
+		
+		User temp=new User();
+
+		try (PreparedStatement ps = connection.prepareStatement("select * from user u where u.login=? and u.password=?;")) {
+			ps.setString(1, loginInput);
+			ps.setString(2, passwordInput);
+
+			try (ResultSet rs = ps.executeQuery();) {
+				while (rs.next()) {
+					
+					temp.setNome(rs.getString("NOME"));
+					temp.setCognome(rs.getString("COGNOME"));
+					temp.setLogin(rs.getString("LOGIN"));
+					temp.setPassword(rs.getString("PASSWORD"));
+					temp.setDateCreated(
+							rs.getDate("DATECREATED") != null ? rs.getDate("DATECREATED").toLocalDate() : null);
+					temp.setId(rs.getLong("ID"));
+					
+					
+				}
+			} // niente catch qui
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return temp;
 	}
 
 }

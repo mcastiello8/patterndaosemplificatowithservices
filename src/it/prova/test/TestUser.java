@@ -30,11 +30,19 @@ public class TestUser {
 //
 //			testUpdateUser(userService);
 //			System.out.println("In tabella ci sono " + userService.listAll().size() + " elementi.");
-			
-			testCercaTuttiQuelliCheUsernameIniziaCon(userService);
+
+//			testCercaTuttiQuelliCheUsernameIniziaCon(userService);
+//			System.out.println("In tabella ci sono " + userService.listAll().size() + " elementi.");
+
+//			testCercaTuttiQuelliCreatiPrimaDi(userService);
+//			System.out.println("In tabella ci sono " + userService.listAll().size() + " elementi.");
+
+//			testCercaPerCognomeENomeCheInziaCon(userService);
+//			System.out.println("In tabella ci sono " + userService.listAll().size() + " elementi.");
+
+			testAccedi(userService);
 			System.out.println("In tabella ci sono " + userService.listAll().size() + " elementi.");
-			
-			
+
 			// E TUTTI I TEST VANNO FATTI COSI'
 
 		} catch (Exception e) {
@@ -115,14 +123,58 @@ public class TestUser {
 
 	public static void testCercaTuttiQuelliCheUsernameIniziaCon(UserService userService) throws Exception {
 		System.out.println(".......testCercaTuttiQuelliCheUsernameIniziaCon inizio.............");
-	
-		String iniziale="Gi";
-		
-		List<User> risultatiTestCercaTuttiUsernameIniziaPer= userService.cercaTuttiQuelliCheUsernameIniziaCon(iniziale);
-		
+
+		String iniziale = "Gi";
+
+		List<User> risultatiTestCercaTuttiUsernameIniziaPer = userService
+				.cercaTuttiQuelliCheUsernameIniziaCon(iniziale);
+
 		System.out.println(risultatiTestCercaTuttiUsernameIniziaPer);
-		
+
 		System.out.println(".......testCercaTuttiQuelliCheUsernameIniziaCon PASSED.............");
+	}
+
+	// =============================================================
+	public static void testCercaTuttiQuelliCreatiPrimaDi(UserService userService) throws Exception {
+		System.out.println(".......testCercaTuttiQuelliCreatiPrimaDi inizio.............");
+
+		LocalDate dataTestCercaTuttiCreatiPrimaDi = LocalDate.parse("2023-01-01");
+
+		List<User> risultatiTestCercaTuttiCreatiPrimaDi = userService
+				.cercaTuttiQuelliCreatiPrimaDi(dataTestCercaTuttiCreatiPrimaDi);
+
+		System.out.println(risultatiTestCercaTuttiCreatiPrimaDi);
+
+		System.out.println(".......testCercaTuttiQuelliCreatiPrimaDi PASSED.............");
+	}
+
+	// =============================================================
+	public static void testCercaPerCognomeENomeCheInziaCon(UserService userService) throws Exception {
+		System.out.println(".......testCercaTuttiQuelliCheUsernameIniziaCon inizio.............");
+
+		String inizialeCognome = "r";
+		String inizialeNome = "m";
+
+		List<User> risultatiTestCercaPerCognomeENomeCheInziaCon = userService
+				.cercaPerCognomeENomeCheInziaCon(inizialeCognome, inizialeNome);
+
+		System.out.println(risultatiTestCercaPerCognomeENomeCheInziaCon);
+
+		System.out.println(".......testCercaTuttiQuelliCheUsernameIniziaCon PASSED.............");
+	}
+
+	// =============================================================
+	public static void testAccedi(UserService userService) throws Exception {
+		System.out.println(".......testAccedi inizio.............");
+
+		String login = "avavv";
+		String password = "bobobo";
+
+		User risultatoTestAccedi = userService.accedi(login, password);
+
+		System.out.println(risultatoTestAccedi);
+
+		System.out.println(".......testAccedi PASSED.............");
 	}
 
 }
